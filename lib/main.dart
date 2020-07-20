@@ -1,6 +1,6 @@
 //dart has a main function that gets called automatically
 import 'package:flutter/material.dart';
-
+import './answer.dart';
 import './question.dart';
 
 void main() {
@@ -20,21 +20,32 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
+  var _questionIndex = 0;
 
-  void answerQuestion() {
+  void _answerQuestion() {
     setState(() {
-      questionIndex = questionIndex + 1;
+      _questionIndex = _questionIndex + 1;
     });
 
-    print(questionIndex);
+    print(_questionIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     var questions = [
-      'What\'s your favourite color ? ',
-      'What\'s your favourite animal ? ',
+      //creating maps
+      {
+        'questionText': 'What\'s your favourite color ? ',
+        'answers': ['Blue', 'Blue', 'Red', 'Green'],
+      },
+      {
+        'questionText': 'What\'s your favourite animal ? ',
+        'answers': ['Zebra', 'Elephant', 'Dog', 'Cat'],
+      },
+      {
+        'questionText': 'Who\'s your favourite cricketer? ',
+        'answers': ['Sangakara', 'MSD', 'Sehwag', 'Kohli'],
+      }
     ];
     return MaterialApp(
       home: Scaffold(
@@ -43,21 +54,13 @@ class MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Question(questions.elementAt(questionIndex)),
-            RaisedButton(
-                child: Text('Answer 1'),
-                onPressed:
-                    answerQuestion), //here we don't use () to answer question because , it is given as a pointer.
-            RaisedButton(child: Text('Answer 2'), onPressed: answerQuestion),
-            RaisedButton(
-                child: Text('Answer 3'),
-                onPressed: () => print(
-                    'Answer 3 chosen')), //This is another way of writing an anonymous function.
-            RaisedButton(
-                child: Text('Answer 4'),
-                onPressed: () {
-                  print('Answer 4 chosen');
-                }), //This is again another method.
+            Question(questions[_questionIndex]['questionText']),
+            //mapping the maps to list in widgets
+            //spread operator ... takes a list , and pull the value from the list and add to the surrounding lists.
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }).toList()
           ],
         ),
       ),
